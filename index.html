@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garment Internal Movement Log</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for better aesthetics */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light gray background */
+        }
+        /* Custom styles for better visual appeal and responsiveness */
+        .form-container {
+            max-width: 90%; /* Max width for larger screens */
+            margin: 2rem auto; /* Center the form with margin */
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-radius: 12px; /* More rounded corners */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Softer shadow */
+        }
+        .form-title {
+            color: #333;
+            font-size: 1.75rem; /* Larger title */
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .form-description {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #444;
+            font-size: 0.9rem;
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem; /* Increased padding */
+            border: 1px solid #d1d5db; /* Lighter border */
+            border-radius: 8px; /* Rounded corners for inputs */
+            font-size: 1rem;
+            color: #333;
+            background-color: #f9fafb; /* Slightly off-white background */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #6366f1; /* Indigo focus border */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); /* Soft focus shadow */
+        }
+        .form-textarea {
+            min-height: 100px; /* Min height for text area */
+            resize: vertical; /* Allow vertical resize */
+        }
+        .form-button {
+            width: 100%;
+            padding: 0.9rem 1.5rem; /* Larger button */
+            background-color: #4f46e5; /* Indigo button */
+            color: white;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); /* Button shadow */
+        }
+        .form-button:hover {
+            background-color: #4338ca; /* Darker indigo on hover */
+            transform: translateY(-1px); /* Slight lift on hover */
+        }
+        .form-button:active {
+            transform: translateY(0); /* Press effect */
+        }
+        .required-asterisk {
+            color: #ef4444; /* Red asterisk */
+            margin-left: 4px;
+        }
+        .message-box {
+            background-color: #d1fae5; /* Light green for success */
+            color: #065f46; /* Dark green text */
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            display: none; /* Hidden by default */
+        }
+        /* Styles for dynamic size/quantity inputs */
+        .size-quantity-item {
+            display: flex;
+            gap: 1rem; /* Space between size and quantity inputs */
+            align-items: flex-end; /* Align items to the bottom */
+            margin-bottom: 0.75rem;
+        }
+        .size-quantity-item > div {
+            flex: 1; /* Distribute space evenly */
+        }
+        .size-quantity-item .form-select,
+        .size-quantity-item .form-input {
+            margin-bottom: 0; /* Remove default margin-bottom from these inputs */
+        }
+        .remove-button {
+            background-color: #ef4444; /* Red for remove button */
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            white-space: nowrap; /* Prevent text wrapping */
+            transition: background-color 0.3s ease;
+        }
+        .remove-button:hover {
+            background-color: #dc2626; /* Darker red on hover */
+        }
+        .add-more-button {
+            background-color: #22c55e; /* Green for add button */
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+        .add-more-button:hover {
+            background-color: #16a34a; /* Darker green on hover */
+        }
+        .section-heading {
+            font-weight: 700;
+            color: #333;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="form-title">Garment Internal Movement Log</h1>
+        <p class="form-description">Track the movement of goods and processes within the factory. Please fill in details accurately.</p>
+
+        <form id="garmentMovementForm" class="space-y-6">
+            <!-- Operator Name -->
+            <div>
+                <label for="operatorName" class="form-label">Operator Name<span class="required-asterisk">*</span></label>
+                <select id="operatorName" name="operatorName" class="form-select" required>
+                    <option value="" disabled selected>Select Operator</option>
+                    <option value="John Doe">John Doe</option>
+                    <option value="Jane Smith">Jane Smith</option>
+                    <option value="Supervisor A">Supervisor A</option>
+                    <option value="Helper B">Helper B</option>
+                    <option value="Worker C">Worker C</option>
+                </select>
+            </div>
+
+            <!-- Style Number -->
+            <div>
+                <label for="styleNumber" class="form-label">Style Number<span class="required-asterisk">*</span></label>
+                <input type="text" id="styleNumber" name="styleNumber" class="form-input" placeholder="e.g., ABC-123" required>
+            </div>
+
+            <!-- Lot Number / Batch ID -->
+            <div>
+                <label for="lotNumber" class="form-label">Lot Number / Batch ID<span class="required-asterisk">*</span></label>
+                <input type="text" id="lotNumber" name="lotNumber" class="form-input" placeholder="e.g., LOT001" required>
+            </div>
+
+            <!-- Color -->
+            <div>
+                <label for="color" class="form-label">Color<span class="required-asterisk">*</span></label>
+                <select id="color" name="color" class="form-select" required>
+                    <option value="" disabled selected>Select Color</option>
+                    <option value="Black">Black</option>
+                    <option value="White">White</option>
+                    <option value="Red">Red</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Green">Green</option>
+                    <option value="Gray">Gray</option>
+                    <option value="Yellow">Yellow</option>
+                </select>
+            </div>
+
+            <!-- Dynamic Size and Quantity Section -->
+            <div class="section-heading">Size & Quantity Details for Selected Color</div>
+            <div id="sizeQuantityContainer">
+                <!-- Initial size/quantity input field -->
+                <div class="size-quantity-item">
+                    <div>
+                        <label for="size_0" class="form-label">Size<span class="required-asterisk">*</span></label>
+                        <select id="size_0" name="sizes[]" class="form-select" required>
+                            <option value="" disabled selected>Select Size</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                            <option value="Free Size">Free Size</option>
+                            <option value="30">30</option>
+                            <option value="32">32</option>
+                            <option value="34">34</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="quantity_0" class="form-label">Quantity<span class="required-asterisk">*</span></label>
+                        <input type="number" id="quantity_0" name="quantities[]" class="form-input" placeholder="e.g., 50" min="0" required>
+                    </div>
+                    <!-- No remove button for the initial item -->
+                </div>
+            </div>
+            <button type="button" id="addSizeQuantity" class="add-more-button w-full">Add Another Size & Quantity</button>
+
+            <!-- Point Worked On -->
+            <div>
+                <label for="pointWorkedOn" class="form-label">Point Worked On</label>
+                <input type="text" id="pointWorkedOn" name="pointWorkedOn" class="form-input" placeholder="e.g., Collar attachment, Hemming">
+            </div>
+
+            <!-- Remarks / Notes -->
+            <div>
+                <label for="remarks" class="form-label">Remarks / Notes</label>
+                <textarea id="remarks" name="remarks" class="form-textarea" placeholder="Any additional notes..."></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="form-button">Submit Log</button>
+        </form>
+
+        <!-- Message Box for submission confirmation -->
+        <div id="messageBox" class="message-box">
+            Thank you for your submission! Data recorded.
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('garmentMovementForm');
+        const messageBox = document.getElementById('messageBox');
+        const sizeQuantityContainer = document.getElementById('sizeQuantityContainer');
+        const addSizeQuantityButton = document.getElementById('addSizeQuantity');
+        let itemCounter = 0; // To keep track of unique IDs for dynamic elements
+
+        // Function to create a new size/quantity input group
+        function createSizeQuantityItem() {
+            itemCounter++; // Increment counter for unique IDs
+
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'size-quantity-item';
+
+            // Size Select
+            const sizeDiv = document.createElement('div');
+            const sizeLabel = document.createElement('label');
+            sizeLabel.htmlFor = `size_${itemCounter}`;
+            sizeLabel.className = 'form-label';
+            sizeLabel.innerHTML = `Size<span class="required-asterisk">*</span>`;
+            const sizeSelect = document.createElement('select');
+            sizeSelect.id = `size_${itemCounter}`;
+            sizeSelect.name = 'sizes[]'; // Use array notation for multiple values
+            sizeSelect.className = 'form-select';
+            sizeSelect.required = true;
+
+            const sizes = ["", "S", "M", "L", "XL", "XXL", "Free Size", "30", "32", "34"];
+            sizes.forEach(size => {
+                const option = document.createElement('option');
+                option.value = size;
+                option.textContent = size === "" ? "Select Size" : size;
+                if (size === "") {
+                    option.disabled = true;
+                    option.selected = true;
+                }
+                sizeSelect.appendChild(option);
+            });
+            sizeDiv.appendChild(sizeLabel);
+            sizeDiv.appendChild(sizeSelect);
+
+            // Quantity Input
+            const quantityDiv = document.createElement('div');
+            const quantityLabel = document.createElement('label');
+            quantityLabel.htmlFor = `quantity_${itemCounter}`;
+            quantityLabel.className = 'form-label';
+            quantityLabel.innerHTML = `Quantity<span class="required-asterisk">*</span>`;
+            const quantityInput = document.createElement('input');
+            quantityInput.type = 'number';
+            quantityInput.id = `quantity_${itemCounter}`;
+            quantityInput.name = 'quantities[]'; // Use array notation for multiple values
+            quantityInput.className = 'form-input';
+            quantityInput.placeholder = 'e.g., 50';
+            quantityInput.min = '0';
+            quantityInput.required = true;
+            quantityDiv.appendChild(quantityLabel);
+            quantityDiv.appendChild(quantityInput);
+
+            // Remove Button
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'remove-button self-center'; // Align with inputs
+            removeButton.textContent = 'Remove';
+            removeButton.onclick = () => itemDiv.remove(); // Remove the parent div when clicked
+
+            itemDiv.appendChild(sizeDiv);
+            itemDiv.appendChild(quantityDiv);
+            itemDiv.appendChild(removeButton);
+
+            return itemDiv;
+        }
+
+        // Add event listener for "Add Another Size & Quantity" button
+        addSizeQuantityButton.addEventListener('click', () => {
+            sizeQuantityContainer.appendChild(createSizeQuantityItem());
+        });
+
+        // Add event listener for form submission
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Collect all dynamic size/quantity pairs
+            const sizes = Array.from(document.querySelectorAll('select[name="sizes[]"]')).map(select => select.value);
+            const quantities = Array.from(document.querySelectorAll('input[name="quantities[]"]')).map(input => parseInt(input.value, 10));
+
+            const sizeQuantityDetails = [];
+            for (let i = 0; i < sizes.length; i++) {
+                if (sizes[i] && !isNaN(quantities[i])) { // Ensure both are valid
+                    sizeQuantityDetails.push({
+                        size: sizes[i],
+                        quantity: quantities[i]
+                    });
+                }
+            }
+
+            const formData = {
+                operatorName: document.getElementById('operatorName').value,
+                styleNumber: document.getElementById('styleNumber').value,
+                lotNumber: document.getElementById('lotNumber').value,
+                color: document.getElementById('color').value,
+                sizeQuantityDetails: sizeQuantityDetails, // This is the new structure
+                // Removed processLocation and status
+                pointWorkedOn: document.getElementById('pointWorkedOn').value,
+                remarks: document.getElementById('remarks').value,
+                timestamp: new Date().toLocaleString()
+            };
+
+            console.log('Form Submitted Data:', formData);
+
+            // Display the success message
+            messageBox.style.display = 'block';
+            messageBox.textContent = 'Thank you for your submission! Data recorded.';
+
+            // Optional: Clear the form after a short delay
+            setTimeout(() => {
+                form.reset();
+                messageBox.style.display = 'none';
+                // Clear dynamically added size/quantity fields, keeping only the first one
+                while (sizeQuantityContainer.children.length > 1) {
+                    sizeQuantityContainer.removeChild(sizeQuantityContainer.lastChild);
+                }
+                // Reset the first size/quantity item's values
+                document.getElementById('size_0').value = "";
+                document.getElementById('quantity_0').value = "";
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
